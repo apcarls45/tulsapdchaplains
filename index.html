@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tulsa Police Department Chaplains Corps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;
+  --navy-mid:#162336;
+  --gold:#b8973a;
+  --gold-light:#d4af5a;
+  --cream:#f5f2eb;
+  --off-white:#faf9f6;
+  --text-dark:#1a1a1a;
+  --text-mid:#4a4a4a;
+  --text-muted:#888;
+  --border:#ddd8cc;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--off-white);color:var(--text-dark);font-size:15px;line-height:1.7}
+
+/* NAV */
+nav{background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-badge{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-badge svg{width:20px;height:20px;fill:var(--navy)}
+.nav-title{font-family:'Oswald',sans-serif;color:#fff;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;line-height:1.25}
+.nav-title span{display:block;font-weight:400;font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.15em}
+.nav-links{display:flex;align-items:center;gap:1.75rem}
+.nav-links a{color:rgba(255,255,255,.65);text-decoration:none;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-login{background:var(--gold);color:var(--navy)!important;padding:8px 18px;font-weight:500;transition:background .2s!important}
+.nav-login:hover{background:var(--gold-light)!important}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.nav-toggle span{display:block;width:22px;height:1.5px;background:rgba(255,255,255,.7)}
+
+/* HERO */
+.hero{background:var(--navy);min-height:560px;display:flex;align-items:center;position:relative;overflow:hidden;padding:5rem 2rem}
+.hero-lines{position:absolute;right:-40px;top:0;bottom:0;width:50%;opacity:.05;pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:700px;margin:0 auto;width:100%}
+.hero-eyebrow{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';display:inline-block;width:36px;height:1px;background:var(--gold)}
+h1{font-family:'Oswald',sans-serif;font-size:clamp(2.4rem,5.5vw,3.8rem);font-weight:600;color:#fff;line-height:1.08;letter-spacing:.01em;margin-bottom:1.5rem}
+h1 em{color:var(--gold);font-style:normal}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.6);font-weight:300;max-width:500px;margin-bottom:2.75rem;line-height:1.8}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{background:var(--gold);color:var(--navy);font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:13px 28px;border:none;cursor:pointer;font-weight:500;text-decoration:none;display:inline-block;transition:background .2s}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;color:#fff;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:13px 28px;border:1px solid rgba(255,255,255,.25);cursor:pointer;font-weight:400;text-decoration:none;display:inline-block;transition:border-color .2s,color .2s}
+.btn-outline:hover{border-color:rgba(255,255,255,.6)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.1)}
+.hero-stat strong{display:block;font-family:'Oswald',sans-serif;font-size:1.7rem;color:#fff;font-weight:500;line-height:1}
+.hero-stat span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px;display:block}
+
+/* GOLD BAR */
+.gold-bar{height:4px;background:var(--gold);width:100%}
+
+/* MISSION BAND */
+.mission-band{background:var(--navy-mid);padding:3.5rem 2rem;text-align:center}
+.mission-band blockquote{font-family:'Source Serif 4',Georgia,serif;font-size:clamp(1.05rem,2.2vw,1.35rem);font-style:italic;font-weight:300;color:rgba(255,255,255,.8);max-width:640px;margin:0 auto;line-height:1.85}
+.mission-band cite{display:block;margin-top:1.1rem;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-style:normal}
+
+/* SECTIONS */
+.section{padding:4.5rem 2rem;max-width:960px;margin:0 auto}
+.section-label{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+h2{font-family:'Oswald',sans-serif;font-size:clamp(1.6rem,3vw,2.1rem);font-weight:500;color:var(--navy);letter-spacing:.02em;margin-bottom:1.25rem}
+.lead{font-size:15px;color:var(--text-mid);font-weight:300;margin-bottom:2.5rem;max-width:580px;line-height:1.8}
+
+/* SERVICE CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.card{background:var(--off-white);padding:1.75rem 1.5rem;transition:background .2s}
+.card:hover{background:#fff}
+.card-icon{width:34px;height:34px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
+.card-icon svg{width:16px;height:16px;fill:var(--gold)}
+.card h3{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--navy);margin-bottom:.6rem}
+.card p{font-size:13px;color:var(--text-mid);line-height:1.7}
+
+/* SECTION DIVIDER */
+.section-rule{max-width:960px;margin:0 auto;height:1px;background:var(--border)}
+
+/* APPLY */
+.apply-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.requirements{list-style:none;margin-bottom:2rem}
+.requirements li{font-size:13px;color:var(--text-mid);padding:9px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.req-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:5px;flex-shrink:0}
+.download-block{background:#fff;border:1px solid var(--border);padding:1.25rem;display:flex;align-items:center;gap:14px;text-decoration:none}
+.dl-icon-wrap{width:38px;height:38px;background:var(--cream);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dl-icon-wrap svg{width:18px;height:18px;fill:var(--navy)}
+.dl-label{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.06em;color:var(--navy);font-weight:500}
+.dl-sub{font-size:12px;color:var(--text-muted);font-family:'Source Serif 4',Georgia,serif;margin-top:2px}
+.dl-arrow{margin-left:auto;font-size:18px;color:var(--gold)}
+
+/* FORM CARD */
+.form-card{background:#fff;border:1px solid var(--border);padding:2rem}
+.form-card h3{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--navy);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.field input,.field textarea{width:100%;border:1px solid var(--border);padding:9px 12px;font-family:'Source Serif 4',Georgia,serif;font-size:14px;color:var(--text-dark);background:var(--off-white);outline:none;transition:border-color .2s}
+.field input:focus,.field textarea:focus{border-color:var(--navy);background:#fff}
+.field textarea{height:82px;resize:none}
+.form-note{font-size:12px;color:var(--text-muted);margin-bottom:1rem;font-style:italic}
+.btn-submit{width:100%;background:var(--navy);color:#fff;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:13px;border:none;cursor:pointer;font-weight:500;transition:background .2s}
+.btn-submit:hover{background:#1e3a52}
+
+/* FOOTER */
+footer{background:var(--navy);padding:2.25rem 2rem;text-align:center;margin-top:0}
+footer p{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.3);line-height:2}
+footer strong{color:var(--gold);font-weight:500}
+footer a{color:rgba(255,255,255,.45);text-decoration:none}
+footer a:hover{color:var(--gold)}
+
+/* MOBILE */
+@media(max-width:680px){
+  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:var(--navy);flex-direction:column;padding:1rem 2rem 1.5rem;gap:1rem;border-top:1px solid rgba(255,255,255,.1)}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:flex}
+  .apply-grid{grid-template-columns:1fr;gap:2.5rem}
+  .hero-stats{flex-wrap:wrap;gap:1.5rem}
+  h1{font-size:2.2rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-badge">
+      <svg viewBox="0 0 24 24"><path d="M12 2L9.5 7H4l4.2 3.1-1.6 5.1L12 12.2l5.4 3 -1.6-5.1L20 7h-5.5z"/></svg>
+    </div>
+    <div class="nav-title">
+      Chaplains Corps
+      <span>Tulsa Police Department</span>
+    </div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#mission">Mission</a>
+    <a href="#apply">Apply</a>
+    <a href="dashboard.html" class="nav-login">Chaplain Login</a>
+  </div>
+  <div class="nav-toggle" id="navToggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<section class="hero">
+  <svg class="hero-lines" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid slice">
+    <line x1="0" y1="0" x2="500" y2="600" stroke="white" stroke-width="1.5"/>
+    <line x1="100" y1="0" x2="600" y2="600" stroke="white" stroke-width="1.5"/>
+    <line x1="200" y1="0" x2="700" y2="600" stroke="white" stroke-width="1.5"/>
+    <line x1="300" y1="0" x2="800" y2="600" stroke="white" stroke-width="1.5"/>
+    <line x1="50" y1="0" x2="550" y2="600" stroke="white" stroke-width=".75"/>
+    <line x1="150" y1="0" x2="650" y2="600" stroke="white" stroke-width=".75"/>
+    <line x1="250" y1="0" x2="750" y2="600" stroke="white" stroke-width=".75"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Tulsa Police Department</div>
+    <h1>Serving Those<br>Who <em>Serve</em> Our City</h1>
+    <p class="hero-sub">The TPD Chaplains Corps provides spiritual care, crisis support, and pastoral presence to officers, their families, and the Tulsa community.</p>
+    <div class="hero-actions">
+      <a href="#apply" class="btn-primary">Apply to Serve</a>
+      <a href="#mission" class="btn-outline">Our Mission</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>24/7</strong><span>On-Call Response</span></div>
+      <div class="hero-stat"><strong>Vetted</strong><span>&amp; Credentialed</span></div>
+      <div class="hero-stat"><strong>Dept.</strong><span>Family</span></div>
+    </div>
+  </div>
+</section>
+<div class="gold-bar"></div>
+
+<div class="mission-band">
+  <blockquote>
+    "We walk alongside officers through critical incidents, personal crises, grief, and the everyday weight of a demanding profession."
+    <cite>— TPD Chaplains Corps</cite>
+  </blockquote>
+</div>
+
+<div id="mission" class="section">
+  <div class="section-label">Who We Are</div>
+  <h2>The Heart Behind the Badge</h2>
+  <p class="lead">A volunteer ministry serving the men and women of the TPD — providing confidential spiritual care, emotional support, and pastoral counseling to those who protect our city.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 21C12 21 4 13.5 4 8a8 8 0 0116 0c0 5.5-8 13-8 13z"/></svg>
+      </div>
+      <h3>Spiritual Care</h3>
+      <p>Confidential pastoral support for officers and their families at any stage of life or career.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6l-8-4z"/></svg>
+      </div>
+      <h3>Crisis Response</h3>
+      <p>On-scene presence during critical incidents, line-of-duty injuries, and traumatic events.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <h3>Community Presence</h3>
+      <p>Serving Tulsa residents alongside officers — death notifications, family support, and more.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <h3>Officer Wellness</h3>
+      <p>Supporting the whole person — mental, emotional, and spiritual health of those who protect our city.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-rule"></div>
+
+<div id="apply" class="section" style="padding-bottom:5rem">
+  <div class="section-label">Join the Corps</div>
+  <h2>Answer the Call to Serve</h2>
+  <div class="apply-grid">
+    <div>
+      <p style="font-size:14px;color:var(--text-mid);margin-bottom:1.75rem;font-weight:300">Chaplain candidates go through a formal vetting and training process before being credentialed with the Tulsa Police Department.</p>
+      <ul class="requirements">
+        <li><span class="req-dot"></span>Active involvement in a local faith community</li>
+        <li><span class="req-dot"></span>Completion of background check and interview process</li>
+        <li><span class="req-dot"></span>Commitment to required training and ride-alongs</li>
+        <li><span class="req-dot"></span>Willingness to serve across all shifts and on-call rotations</li>
+        <li><span class="req-dot"></span>Non-proselytizing, professional pastoral approach</li>
+      </ul>
+      <a class="download-block" href="/files/Chaplain_Application.pdf" target="_blank">
+        <div class="dl-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM14 3v5h5M12 17v-6M9 14l3 3 3-3"/></svg>
+        </div>
+        <div>
+          <div class="dl-label">Chaplain Application</div>
+          <div class="dl-sub">Download &middot; Complete &middot; Email to Coordinator</div>
+        </div>
+        <span class="dl-arrow">&#8599;</span>
+      </a>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:.75rem;font-style:italic">Return completed applications to: <a href="mailto:dlynchard@cityoftulsa.org" style="color:var(--navy)">dlynchard@cityoftulsa.org</a></p>
+    </div>
+
+    <div class="form-card">
+      <h3>Interest Form</h3>
+      <p class="form-note">Fill out the form below and a chaplain coordinator will be in touch with next steps.</p>
+      <div class="field"><label>Full Name</label><input type="text" placeholder="John Smith"></div>
+      <div class="field"><label>Email Address</label><input type="email" placeholder="john@church.org"></div>
+      <div class="field"><label>Phone Number</label><input type="tel" placeholder="(918) 555-0100"></div>
+      <div class="field"><label>Church / Faith Community</label><input type="text" placeholder="First Baptist Tulsa"></div>
+      <div class="field"><label>Brief Statement of Interest</label><textarea placeholder="Tell us what draws you to chaplaincy ministry with law enforcement..."></textarea></div>
+      <button class="btn-submit">Submit Interest Form</button>
+    </div>
+  </div>
+</div>
+
+<div class="gold-bar"></div>
+<footer>
+  <p><strong>Tulsa Police Department</strong> — Chaplains Corps</p>
+  <p>Serving with integrity &nbsp;&middot;&nbsp; Faith in action &nbsp;&middot;&nbsp; City of Tulsa, Oklahoma</p>
+  <p style="margin-top:.5rem"><a href="dashboard.html">Chaplain Portal Login</a></p>
+</footer>
+
+</body>
+</html>
