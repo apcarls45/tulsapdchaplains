@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaplain Portal — TPD Chaplains Corps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;
+  --navy-mid:#162336;
+  --navy-light:#1e3a52;
+  --gold:#b8973a;
+  --gold-light:#d4af5a;
+  --cream:#f5f2eb;
+  --off-white:#faf9f6;
+  --text-dark:#1a1a1a;
+  --text-mid:#4a4a4a;
+  --text-muted:#888;
+  --border:#ddd8cc;
+  --sidebar-w:240px;
+}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--off-white);color:var(--text-dark);font-size:15px;line-height:1.7}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.login-box{width:100%;max-width:380px;text-align:center}
+.login-badge-wrap{margin:0 auto 2rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.login-badge-ring{width:96px;height:96px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 8px rgba(184,151,58,.2)}
+.login-badge-ring svg{width:52px;height:52px;fill:var(--navy)}
+.login-dept{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.login-corp{font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:500;line-height:1.2}
+.login-divider{width:48px;height:1px;background:rgba(255,255,255,.15);margin:.75rem auto}
+.login-card{background:#fff;padding:2rem}
+.login-card h2{font-family:'Oswald',sans-serif;font-size:16px;font-weight:500;color:var(--navy);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.25rem}
+.login-card p{font-size:13px;color:var(--text-muted);margin-bottom:1.5rem}
+.login-field label{display:block;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;text-align:left}
+.login-field input{width:100%;border:1px solid var(--border);padding:10px 12px;font-family:'Source Serif 4',Georgia,serif;font-size:14px;color:var(--text-dark);background:var(--off-white);outline:none;margin-bottom:1.1rem;transition:border-color .2s}
+.login-field input:focus{border-color:var(--navy);background:#fff}
+.login-btn{width:100%;background:var(--navy);color:#fff;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:13px;border:none;cursor:pointer;font-weight:500;transition:background .2s}
+.login-btn:hover{background:var(--navy-light)}
+.login-error{font-size:13px;color:#c0392b;margin-top:.75rem;display:none;font-style:italic}
+.login-back{display:block;text-align:center;margin-top:1.25rem;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);text-decoration:none}
+.login-back:hover{color:rgba(255,255,255,.65)}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none;min-height:100vh}
+
+/* TOP BAR */
+.topbar{background:var(--navy);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-badge{width:32px;height:32px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.topbar-badge svg{width:17px;height:17px;fill:var(--navy)}
+.topbar-title{font-family:'Oswald',sans-serif;color:#fff;font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.topbar-title span{color:rgba(255,255,255,.45);font-weight:400}
+.topbar-right{display:flex;align-items:center;gap:1.25rem}
+.topbar-user{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.topbar-logout{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);cursor:pointer;text-decoration:none;background:none;border:none;padding:0}
+.topbar-logout:hover{color:var(--gold-light)}
+
+/* LAYOUT */
+.dash-body{display:flex;min-height:calc(100vh - 60px)}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--navy-mid);flex-shrink:0;padding:1.5rem 0}
+.sidebar-section{font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:0 1.25rem .5rem;margin-top:1rem}
+.sidebar-section:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 1.25rem;cursor:pointer;transition:background .15s;text-decoration:none;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:rgba(255,255,255,.08);border-left-color:var(--gold)}
+.nav-item svg{width:16px;height:16px;fill:rgba(255,255,255,.4);flex-shrink:0}
+.nav-item.active svg{fill:var(--gold)}
+.nav-item span{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:400}
+.nav-item.active span{color:#fff}
+
+/* MAIN CONTENT */
+.main{flex:1;padding:2.5rem;overflow-y:auto;min-width:0}
+.panel{display:none}
+.panel.active{display:block}
+
+/* PANEL HEADER */
+.panel-header{margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.panel-label{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem}
+.panel-header h2{font-family:'Oswald',sans-serif;font-size:1.6rem;font-weight:500;color:var(--navy);letter-spacing:.02em}
+
+/* WELCOME CARDS */
+.welcome-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2rem}
+.welcome-card{background:var(--off-white);padding:1.25rem;text-align:center;cursor:pointer;transition:background .15s}
+.welcome-card:hover{background:#fff}
+.wc-icon{width:36px;height:36px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem}
+.wc-icon svg{width:17px;height:17px;fill:var(--gold)}
+.welcome-card h3{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--navy);margin-bottom:.3rem}
+.welcome-card p{font-size:12px;color:var(--text-muted);line-height:1.5}
+.welcome-msg{background:var(--navy);padding:1.5rem;color:rgba(255,255,255,.7);font-size:14px;font-weight:300;line-height:1.8}
+.welcome-msg strong{color:var(--gold);font-weight:500}
+
+/* REPORT BUTTON */
+.report-cta{background:var(--navy);padding:2.5rem;text-align:center;margin-bottom:2rem}
+.report-cta h3{font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:500;color:#fff;letter-spacing:.05em;margin-bottom:.75rem}
+.report-cta p{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:1.5rem;font-weight:300}
+.btn-report{display:inline-block;background:var(--gold);color:var(--navy);font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:14px 36px;text-decoration:none;font-weight:500;transition:background .2s}
+.btn-report:hover{background:var(--gold-light)}
+.report-note{font-size:11px;color:rgba(255,255,255,.3);margin-top:1rem;font-style:italic}
+
+/* RESOURCES */
+.resource-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border)}
+.resource-item{background:#fff;display:flex;align-items:center;gap:14px;padding:1rem 1.25rem;text-decoration:none;transition:background .15s}
+.resource-item:hover{background:var(--cream)}
+.res-icon{width:36px;height:36px;background:var(--cream);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.res-icon svg{width:17px;height:17px;fill:var(--navy)}
+.res-info{flex:1;min-width:0}
+.res-name{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.06em;color:var(--navy);font-weight:500}
+.res-meta{font-size:12px;color:var(--text-muted);margin-top:1px}
+.res-badge{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;background:var(--cream);color:var(--text-muted);border:1px solid var(--border);flex-shrink:0}
+.res-arrow{color:var(--gold);font-size:16px;flex-shrink:0;margin-left:8px}
+
+/* ROSTER TABLE */
+.roster-table{width:100%;border-collapse:collapse;border:1px solid var(--border)}
+.roster-table th{background:var(--navy);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:rgba(255,255,255,.6);padding:10px 14px;text-align:left}
+.roster-table td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text-mid)}
+.roster-table tr:last-child td{border-bottom:none}
+.roster-table tr:hover td{background:var(--cream)}
+.badge-id{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--navy);font-weight:500}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4caf50;margin-right:6px}
+.roster-table td a{color:var(--navy);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.roster-table td a:hover{border-bottom-color:var(--gold)}
+.roster-table tr.roster-group td{background:var(--cream);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;color:var(--navy);padding:8px 14px;border-left:3px solid var(--gold)}
+.roster-table tr.roster-group:hover td{background:var(--cream)}
+.roster-name{color:var(--navy);font-weight:500}
+.roster-role{display:inline-block;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-left:8px;vertical-align:middle}
+
+/* TRAINING */
+.training-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border)}
+.training-item{background:#fff;padding:1.25rem;display:flex;align-items:flex-start;gap:14px}
+.training-num{font-family:'Oswald',sans-serif;font-size:22px;color:var(--border);font-weight:600;line-height:1;flex-shrink:0;width:30px}
+.training-info h4{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--navy);margin-bottom:.3rem}
+.training-info p{font-size:13px;color:var(--text-mid);line-height:1.6}
+.training-tag{display:inline-block;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.1em;padding:2px 8px;margin-top:.5rem;background:var(--cream);color:var(--text-muted);border:1px solid var(--border)}
+
+/* MOBILE */
+/* ── SCHEDULE ── */
+.div-tabs{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.div-tab{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;cursor:pointer;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;transition:color .15s}
+.div-tab:hover{color:var(--navy)}
+.div-tab.active{color:var(--navy);border-bottom-color:var(--acc,var(--gold))}
+.div-view{display:none}
+.div-view.active{display:block}
+.div-meta{background:var(--cream);border-left:3px solid var(--acc,var(--gold));padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:13px;color:var(--text-mid)}
+.div-meta strong{color:var(--navy);font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.03em}
+.div-meta .station{display:block;margin-top:.35rem;font-size:12px;color:var(--text-muted)}
+.sched-table{width:100%;border-collapse:collapse;border:1px solid var(--border)}
+.sched-table th{background:var(--navy);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:rgba(255,255,255,.6);padding:10px 14px;text-align:left}
+.sched-table td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text-mid)}
+.sched-table tr:last-child td{border-bottom:none}
+.sched-table tr:hover td{background:var(--cream)}
+.sched-table tr.this-week td{background:var(--off-white);box-shadow:inset 3px 0 0 var(--acc,var(--gold))}
+.sched-table tr.this-week:hover td{background:var(--cream)}
+.sched-week{font-family:'Oswald',sans-serif;letter-spacing:.03em;color:var(--navy);white-space:nowrap}
+.sched-name{font-weight:500;color:var(--text-dark)}
+.week-badge{display:inline-block;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--acc,var(--gold));color:#fff;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.cover-note{display:block;font-size:11px;color:var(--gold);font-style:italic;margin-top:2px}
+.sched-empty{background:#fff;border:1px dashed var(--border);padding:2.25rem 1.5rem;text-align:center;color:var(--text-muted);font-size:13px}
+.div-status{background:var(--off-white);border-left:3px solid var(--acc,var(--gold));padding:.7rem 1.1rem;margin-bottom:1.25rem;font-size:12px;color:var(--text-mid);font-style:italic}
+.sched-pending{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);background:var(--cream);border:1px solid var(--border);padding:2px 9px}
+/* SWAP REQUEST */
+.swap-box{background:#fff;border:1px solid var(--border);padding:1.5rem;margin-top:1.75rem}
+.swap-box h3{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--navy);margin-bottom:.35rem}
+.swap-box .swap-sub{font-size:12px;color:var(--text-muted);margin-bottom:1.25rem}
+.swap-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
+.swap-field{display:flex;flex-direction:column;gap:.3rem}
+.swap-field.full{grid-column:1 / -1}
+.swap-field label{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
+.swap-field select,.swap-field textarea{font-family:'Source Serif 4',Georgia,serif;font-size:13px;padding:9px 11px;border:1px solid var(--border);background:var(--off-white);color:var(--text-dark);width:100%}
+.swap-field textarea{resize:vertical;min-height:64px}
+.swap-field select:focus,.swap-field textarea:focus{outline:none;border-color:var(--acc,var(--gold))}
+.btn-swap{display:inline-block;background:var(--acc,var(--gold));color:#fff;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 30px;border:none;cursor:pointer;font-weight:500;transition:filter .2s}
+.btn-swap:hover{filter:brightness(1.12)}
+.swap-hint{font-size:11px;color:var(--text-muted);margin-top:.75rem;font-style:italic}
+@media(max-width:680px){
+  .sidebar{display:none}
+  .main{padding:1.25rem}
+  .swap-grid{grid-template-columns:1fr}
+  .div-tab{padding:10px 13px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-badge-wrap">
+      <div class="login-badge-ring">
+        <svg viewBox="0 0 24 24"><path d="M12 2L9.5 7H4l4.2 3.1-1.6 5.1L12 12.2l5.4 3-1.6-5.1L20 7h-5.5z"/></svg>
+      </div>
+      <div class="login-corp">Chaplains Corps</div>
+      <div class="login-dept">Tulsa Police Department</div>
+    </div>
+    <div class="login-divider"></div>
+    <div class="login-card">
+      <h2>Chaplain Portal</h2>
+      <p>Authorized chaplains only. Enter your access password to continue.</p>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter portal password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="login-btn" onclick="doLogin()">Access Portal</button>
+      <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+    </div>
+    <a href="index.html" class="login-back">&larr; Back to main site</a>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2L9.5 7H4l4.2 3.1-1.6 5.1L12 12.2l5.4 3-1.6-5.1L20 7h-5.5z"/></svg>
+      </div>
+      <div class="topbar-title">Chaplain Portal &nbsp;<span>/ TPD</span></div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-user">Chaplain</span>
+      <button class="topbar-logout" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <div class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <a class="nav-item active" onclick="showPanel('home')" href="#">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" onclick="showPanel('report')" href="#">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>File Your Report</span>
+      </a>
+      <div class="sidebar-section">Resources</div>
+      <a class="nav-item" onclick="showPanel('resources')" href="#">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        <span>Resources</span>
+      </a>
+      <a class="nav-item" onclick="showPanel('training')" href="#">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        <span>Training</span>
+      </a>
+      <div class="sidebar-section">Scheduling</div>
+      <a class="nav-item" onclick="showPanel('schedule')" href="#">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>On-Call Schedule</span>
+      </a>
+      <div class="sidebar-section">Directory</div>
+      <a class="nav-item" onclick="showPanel('roster')" href="#">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <span>Chaplain Roster</span>
+      </a>
+    </div>
+
+    <div class="main">
+
+      <!-- HOME PANEL -->
+      <div class="panel active" id="panel-home">
+        <div class="panel-header">
+          <div class="panel-label">Chaplain Portal</div>
+          <h2>Welcome Back</h2>
+        </div>
+        <div class="welcome-msg" style="margin-bottom:2rem">
+          <strong>TPD Chaplains Corps</strong> — You are securely logged into the chaplain portal. Use the sidebar to navigate to your resources, file a report, or view the roster.
+        </div>
+        <div class="welcome-grid">
+          <div class="welcome-card" onclick="showPanel('report')">
+            <div class="wc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <h3>File Report</h3>
+            <p>Submit your chaplain call report</p>
+          </div>
+          <div class="welcome-card" onclick="showPanel('resources')">
+            <div class="wc-icon"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+            <h3>Resources</h3>
+            <p>PDFs, guides &amp; documents</p>
+          </div>
+          <div class="welcome-card" onclick="showPanel('training')">
+            <div class="wc-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+            <h3>Training</h3>
+            <p>Requirements &amp; materials</p>
+          </div>
+          <div class="welcome-card" onclick="showPanel('schedule')">
+            <div class="wc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <h3>Schedule</h3>
+            <p>On-call rotation &amp; swaps</p>
+          </div>
+          <div class="welcome-card" onclick="showPanel('roster')">
+            <div class="wc-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <h3>Roster</h3>
+            <p>Active chaplain directory</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORT PANEL -->
+      <div class="panel" id="panel-report">
+        <div class="panel-header">
+          <div class="panel-label">Chaplain Activity</div>
+          <h2>File Your Report</h2>
+        </div>
+        <div class="report-cta">
+          <h3>Submit a Chaplain Call Report</h3>
+          <p>You will be directed to the Tulsa Police Department reporting system to file your chaplain activity report.</p>
+          <a href="https://www.cityoftulsa.org/apps/tpdchaplainreport/Login.aspx" class="btn-report" id="reportLink" target="_blank">Open Report System &#8599;</a>
+          <div class="report-note">Link opens in a new tab &mdash; return here when complete</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);padding:1.5rem">
+          <h3 style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--navy);margin-bottom:.75rem">Before You File</h3>
+          <ul style="list-style:none;font-size:13px;color:var(--text-mid);line-height:1.8">
+            <li style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:10px"><span style="color:var(--gold)">&#8250;</span>Have your badge/ID number ready (e.g. N533)</li>
+            <li style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:10px"><span style="color:var(--gold)">&#8250;</span>Note the incident date, time, and location</li>
+            <li style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:10px"><span style="color:var(--gold)">&#8250;</span>Document the type of call (crisis, notification, wellness, etc.)</li>
+            <li style="padding:6px 0;display:flex;gap:10px"><span style="color:var(--gold)">&#8250;</span>Reports should be filed within 48 hours of the call</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- RESOURCES PANEL -->
+      <div class="panel" id="panel-resources">
+        <div class="panel-header">
+          <div class="panel-label">Documents &amp; Files</div>
+          <h2>Resources</h2>
+        </div>
+        <div class="resource-list">
+          <a class="resource-item" href="/files/Chaplain_Application.pdf" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">Chaplain Application</div>
+              <div class="res-meta">TPD Chaplaincy Corps application form</div>
+            </div>
+            <span class="res-badge">PDF</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+          <a class="resource-item" href="/files/Chaplain_Designators.pdf" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">Chaplain Designators</div>
+              <div class="res-meta">Badge ID assignments — July 2025</div>
+            </div>
+            <span class="res-badge">PDF</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+          <a class="resource-item" href="/files/Helpful_Numbers.pdf" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .99h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">Helpful Numbers</div>
+              <div class="res-meta">Dispatch, police, fire, hospitals &amp; medical examiner</div>
+            </div>
+            <span class="res-badge">PDF</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+          <a class="resource-item" href="/files/FOP_Funeral_Planning_Guide_2023.pdf" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">FOP Funeral Planning Guide</div>
+              <div class="res-meta">Oklahoma Fraternal Order of Police — "When I Die" planning guide</div>
+            </div>
+            <span class="res-badge">PDF</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+          <a class="resource-item" href="/files/Simplified_Death_Notifications.pdf" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">Simplified Death Notifications</div>
+              <div class="res-meta">View in browser — death notification guidance &amp; procedures</div>
+            </div>
+            <span class="res-badge">PDF</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+          <a class="resource-item" href="/files/Simplified_Death_Notifications.ppt" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">Simplified Death Notifications</div>
+              <div class="res-meta">Download PowerPoint file</div>
+            </div>
+            <span class="res-badge">PPT</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+          <a class="resource-item" href="/files/10_Codes_Reference.pdf" target="_blank">
+            <div class="res-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="res-info">
+              <div class="res-name">10-Codes Reference</div>
+              <div class="res-meta">Complete listing of TPD 10-codes &amp; signal codes</div>
+            </div>
+            <span class="res-badge">PDF</span>
+            <span class="res-arrow">&#8599;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- TRAINING PANEL -->
+      <div class="panel" id="panel-training">
+        <div class="panel-header">
+          <div class="panel-label">Requirements &amp; Materials</div>
+          <h2>Training</h2>
+        </div>
+        <div class="training-list">
+          <div class="training-item">
+            <div class="training-num">01</div>
+            <div class="training-info">
+              <h4>Initial Credentialing</h4>
+              <p>All new chaplains must complete the TPD credentialing process including background check, interview, and orientation before riding.</p>
+              <span class="training-tag">Required</span>
+            </div>
+          </div>
+          <div class="training-item">
+            <div class="training-num">02</div>
+            <div class="training-info">
+              <h4>Ride-Along Requirement</h4>
+              <p>A minimum number of supervised ride-alongs with a senior chaplain must be completed prior to independent deployment.</p>
+              <span class="training-tag">Required</span>
+            </div>
+          </div>
+          <div class="training-item">
+            <div class="training-num">03</div>
+            <div class="training-info">
+              <h4>Annual Recertification</h4>
+              <p>Chaplains must complete annual recertification including updated training hours and a review of policy and procedures.</p>
+              <span class="training-tag">Annual</span>
+            </div>
+          </div>
+          <div class="training-item">
+            <div class="training-num">04</div>
+            <div class="training-info">
+              <h4>Crisis Intervention Training</h4>
+              <p>CIT training is strongly encouraged for all chaplains to enhance skills in mental health crisis response alongside officers.</p>
+              <span class="training-tag">Recommended</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROSTER PANEL -->
+      <div class="panel" id="panel-roster">
+        <div class="panel-header">
+          <div class="panel-label">Active Chaplains</div>
+          <h2>Chaplain Roster</h2>
+        </div>
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="roster-group"><td colspan="3">Director</td></tr>
+            <tr><td><span class="roster-name">Danny Lynchard</span></td><td><a href="tel:+19185270061">(918) 527-0061</a></td><td><a href="mailto:dlynchrd@cityoftulsa.org">dlynchrd@cityoftulsa.org</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">On-Call Lines</td></tr>
+            <tr><td><span class="roster-name">On Call — GID</span></td><td><a href="tel:+15397775560">(539) 777-5560</a></td><td>—</td></tr>
+            <tr><td><span class="roster-name">On Call — MVD</span></td><td><a href="tel:+15397775559">(539) 777-5559</a></td><td>—</td></tr>
+            <tr><td><span class="roster-name">On Call — RID</span></td><td><a href="tel:+15397775563">(539) 777-5563</a></td><td>—</td></tr>
+            <tr><td><span class="roster-name">On Call — Hispanic</span></td><td><a href="tel:+19182005166">(918) 200-5166</a></td><td>—</td></tr>
+            <tr><td><span class="roster-name">On Call — Backup</span></td><td><a href="tel:+15397775558">(539) 777-5558</a></td><td>—</td></tr>
+
+            <tr class="roster-group"><td colspan="3">Riverside</td></tr>
+            <tr><td><span class="roster-name">Andrew Carlson</span><span class="roster-role">Sector Chief</span></td><td><a href="tel:+19188293993">(918) 829-3993</a></td><td><a href="mailto:chaplaincarlson@gmail.com">chaplaincarlson@gmail.com</a></td></tr>
+            <tr><td><span class="roster-name">David Bataar</span></td><td><a href="tel:+19184063209">(918) 406-3209</a></td><td><a href="mailto:rev.david777@yahoo.com">rev.david777@yahoo.com</a></td></tr>
+            <tr><td><span class="roster-name">Keith King</span></td><td><a href="tel:+19188514386">(918) 851-4386</a></td><td><a href="mailto:revkeithfaithchurchcp@gmail.com">revkeithfaithchurchcp@gmail.com</a></td></tr>
+            <tr><td><span class="roster-name">Lucinda Morte</span></td><td><a href="tel:+15109099863">(510) 909-9863</a></td><td><a href="mailto:lmorte6179@gmail.com">lmorte6179@gmail.com</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Gilcrease</td></tr>
+            <tr><td><span class="roster-name">Casey Burks</span></td><td><a href="tel:+19188125990">(918) 812-5990</a></td><td><a href="mailto:caseyburks2006@gmail.com">caseyburks2006@gmail.com</a></td></tr>
+            <tr><td><span class="roster-name">Jeanetti Marshall</span></td><td><a href="tel:+15399004961">(539) 900-4961</a></td><td><a href="mailto:grandchurch@yahoo.com">grandchurch@yahoo.com</a></td></tr>
+            <tr><td><span class="roster-name">Chris Taylor</span></td><td><a href="tel:+19184063420">(918) 406-3420</a></td><td><a href="mailto:okchristaylor@yahoo.com">okchristaylor@yahoo.com</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Mingo Valley</td></tr>
+            <tr><td><span class="roster-name">Pat Calhoun</span></td><td><a href="tel:+19186946533">(918) 694-6533</a></td><td><a href="mailto:pat.calhoun007@gmail.com">pat.calhoun007@gmail.com</a></td></tr>
+            <tr><td><span class="roster-name">Troy Johnston</span></td><td><a href="tel:+19188942147">(918) 894-2147</a></td><td><a href="mailto:tjohnston@olp.net">tjohnston@olp.net</a></td></tr>
+            <tr><td><span class="roster-name">Fr. Duy Nguyen</span></td><td><a href="tel:+19188998035">(918) 899-8035</a></td><td><a href="mailto:fr.duy.nguyen@dioceseoftulsa.org">fr.duy.nguyen@dioceseoftulsa.org</a></td></tr>
+            <tr><td><span class="roster-name">Scott Pevehouse</span></td><td><a href="tel:+19189004247">(918) 900-4247</a></td><td><a href="mailto:pastorpvhouse@slbctulsa.org">pastorpvhouse@slbctulsa.org</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Back Up</td></tr>
+            <tr><td><span class="roster-name">Jaime Gonzalez</span></td><td><a href="tel:+19182005166">(918) 200-5166</a></td><td><a href="mailto:jgonzalezn525@gmail.com">jgonzalezn525@gmail.com</a></td></tr>
+            <tr><td><span class="roster-name">Bill Parks</span></td><td><a href="tel:+19186383070">(918) 638-3070</a></td><td><a href="mailto:billparks1160@gmail.com">billparks1160@gmail.com</a></td></tr>
+            <tr><td><span class="roster-name">Mark Shell</span></td><td><a href="tel:+19186300784">(918) 630-0784</a></td><td><a href="mailto:contact@markshellministries.com">contact@markshellministries.com</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Fire</td></tr>
+            <tr><td><span class="roster-name">Terry Sampson</span></td><td><a href="tel:+19187494577">(918) 749-4577</a></td><td><a href="mailto:n5icn@yahoo.com">n5icn@yahoo.com</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Peer to Peer</td></tr>
+            <tr><td><span class="roster-name">Tom Branch</span></td><td><a href="tel:+19186943663">(918) 694-3663</a></td><td><a href="mailto:tbranch@netscape.com">tbranch@netscape.com</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Retired</td></tr>
+            <tr><td><span class="roster-name">Dave Dunson</span></td><td><a href="tel:+19187985593">(918) 798-5593</a></td><td><a href="mailto:davidd@hp4christ.org">davidd@hp4christ.org</a></td></tr>
+            <tr><td><span class="roster-name">Alan McIntyre</span></td><td><a href="tel:+19186931317">(918) 693-1317</a></td><td><a href="mailto:abdj81@att.net">abdj81@att.net</a></td></tr>
+
+            <tr class="roster-group"><td colspan="3">Chaplaincy Corps — Admin</td></tr>
+            <tr><td><span class="roster-name">Stephanie Sherrill</span></td><td>—</td><td><a href="mailto:ssherrill@cityoftulsa.org">ssherrill@cityoftulsa.org</a></td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:1rem;font-style:italic">Roster maintained by the chaplain coordinator, reflecting Director Lynchard's June 2026 list. Contact <a href="mailto:dlynchrd@cityoftulsa.org" style="color:var(--navy)">dlynchrd@cityoftulsa.org</a> to update entries.</p>
+      </div>
+
+      <!-- SCHEDULE PANEL -->
+      <div class="panel" id="panel-schedule">
+        <div class="panel-header">
+          <div class="panel-label">On-Call Rotation</div>
+          <h2>Division Schedule</h2>
+        </div>
+
+        <div class="div-tabs" id="divTabs"><!-- rendered by JS --></div>
+
+        <div id="divViews"><!-- rendered by JS --></div>
+
+        <p style="font-size:12px;color:var(--text-muted);margin-top:1.5rem;font-style:italic">Rotations change often. The week containing today's date is highlighted automatically. To update a division schedule, contact its rotation coordinator.</p>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /dash-body -->
+</div><!-- /dashboard -->
+
+<script>
+const PASSWORD = 'TulsaPDchaplains';
+
+/* ─────────────────────────────────────────────
+   ON-CALL SCHEDULE DATA
+   To edit: change the "who" name or the dates below.
+   Dates are YYYY-MM-DD. A week runs start (inclusive)
+   to end (exclusive). Add "note" for coverage changes.
+   "team" lists chaplains available for swaps (name: email).
+   ───────────────────────────────────────────── */
+/* Standard week ranges for the June–Sept 2026 cycle. Divisions that
+   haven't sent assignments yet use pendingWeeks() so the dates still
+   show with a "to be added" placeholder. Replace a division's
+   weeks: pendingWeeks() with a real list (like Riverside) when ready. */
+const STD_WEEKS = [
+  ["2026-06-01","2026-06-08"],["2026-06-08","2026-06-15"],["2026-06-15","2026-06-22"],
+  ["2026-06-22","2026-06-29"],["2026-06-29","2026-07-06"],["2026-07-06","2026-07-13"],
+  ["2026-07-13","2026-07-20"],["2026-07-20","2026-07-27"],["2026-07-27","2026-08-03"],
+  ["2026-08-03","2026-08-10"],["2026-08-10","2026-08-17"],["2026-08-17","2026-08-24"],
+  ["2026-08-24","2026-08-31"],["2026-08-31","2026-09-07"]
+];
+function pendingWeeks(){ return STD_WEEKS.map(w=>({start:w[0], end:w[1], who:""})); }
+
+const DIVISIONS = {
+  riverside: {
+    accent: "#b8973a",
+    label: "Riverside Division",
+    coverage: "West, midtown, and south Tulsa.",
+    station: "7515 Riverside Pkwy",
+    coordinator: "chaplaincarlson@gmail.com",
+    team: {
+      "Andrew Carlson": "chaplaincarlson@gmail.com",
+      "David Bataar":   "rev.david777@yahoo.com",
+      "Keith King":     "revkeithfaithchurchcp@gmail.com",
+      "Lucinda Morte":  "lmorte6179@gmail.com"
+    },
+    weeks: [
+      {start:"2026-06-01", end:"2026-06-08", who:"Keith King"},
+      {start:"2026-06-08", end:"2026-06-15", who:"Andrew Carlson"},
+      {start:"2026-06-15", end:"2026-06-22", who:"Lucinda Morte"},
+      {start:"2026-06-22", end:"2026-06-29", who:"Jimmy Foreman"},
+      {start:"2026-06-29", end:"2026-07-06", who:"Andrew Carlson"},
+      {start:"2026-07-06", end:"2026-07-13", who:"Lucinda Morte"},
+      {start:"2026-07-13", end:"2026-07-20", who:"Andrew Carlson", note:"Covered for Jimmy Foreman"},
+      {start:"2026-07-20", end:"2026-07-27", who:"Andrew Carlson", note:"Covering for Keith King"},
+      {start:"2026-07-27", end:"2026-08-03", who:"Keith King", note:"Covering for Andrew Carlson"},
+      {start:"2026-08-03", end:"2026-08-10", who:"Jimmy Foreman"},
+      {start:"2026-08-10", end:"2026-08-17", who:"Lucinda Morte"},
+      {start:"2026-08-17", end:"2026-08-24", who:"Keith King"},
+      {start:"2026-08-24", end:"2026-08-31", who:"Andrew Carlson"},
+      {start:"2026-08-31", end:"2026-09-07", who:"Lucinda Morte"}
+    ]
+  },
+  gilcrease: {
+    accent: "#3f6d94",
+    label: "Gilcrease Division",
+    coverage: "North and northwest Tulsa.",
+    station: "3436 N. Delaware Ave",
+    // TO ADD LATER: put this division's coordinator email between the quotes,
+    // fill the team with "Name":"email", then replace pendingWeeks() with a real
+    // list of weeks (see Riverside above) once assignments are set.
+    status: "Schedule in progress \u2014 chaplain assignments coming soon.",
+    coordinator: "",
+    team: {},
+    weeks: pendingWeeks()
+  },
+  mingo: {
+    accent: "#4f7a5b",
+    label: "Mingo Valley Division",
+    coverage: "East and south Tulsa \u2014 south of I-244 and east of Sheridan Rd.",
+    station: "10122 E. 11th St",
+    status: "Schedule in progress \u2014 chaplain assignments coming soon.",
+    coordinator: "",
+    team: {},
+    weeks: pendingWeeks()
+  },
+  downtown: {
+    accent: "#8a4b52",
+    label: "Downtown Division",
+    coverage: "Inner Dispersal Loop (IDL), Gathering Place, Cherry Street, Greenwood, and the Pearl District.",
+    station: "Newest patrol division",
+    status: "Schedule in progress \u2014 chaplain assignments coming soon.",
+    coordinator: "",
+    team: {},
+    weeks: pendingWeeks()
+  }
+};
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function parseD(s){const p=s.split("-");return new Date(+p[0], +p[1]-1, +p[2], 12, 0, 0);}
+function fmtRange(a,b){
+  const d1=parseD(a), d2=parseD(b);
+  const left = MONTHS[d1.getMonth()]+" "+d1.getDate();
+  const right = (d1.getMonth()===d2.getMonth())
+     ? d2.getDate()
+     : MONTHS[d2.getMonth()]+" "+d2.getDate();
+  return left+" \u2013 "+right;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function renderDivisions(){
+  const today = new Date();
+  const container = document.getElementById("divViews");
+  let tabs = "";
+  let html = "";
+  Object.keys(DIVISIONS).forEach((key, i)=>{
+    const d = DIVISIONS[key];
+    const acc = d.accent || "var(--gold)";
+    tabs += '<button class="div-tab'+(i===0?' active':'')+'" style="--acc:'+acc+'" onclick="showDivision(\''+key+'\', this)">'+
+            esc(d.label.replace(" Division",""))+'</button>';
+    html += '<div class="div-view'+(i===0?' active':'')+'" id="view-'+key+'" style="--acc:'+acc+'">';
+    html += '<div class="div-meta"><strong>'+esc(d.label)+'</strong> &mdash; '+esc(d.coverage)+
+            '<span class="station">Station: '+esc(d.station)+'</span></div>';
+    if(d.status){ html += '<div class="div-status">'+esc(d.status)+'</div>'; }
+    // Show only the current week plus upcoming weeks (finished weeks roll off automatically)
+    const upcoming = (d.weeks||[]).filter(w=>parseD(w.end) > today);
+    if(upcoming.length){
+      html += '<table class="sched-table"><thead><tr><th>Week</th><th>On-Call Chaplain</th></tr></thead><tbody>';
+      upcoming.forEach(w=>{
+        const active = (today >= parseD(w.start) && today < parseD(w.end));
+        const nameCell = w.who
+          ? '<span class="sched-name">'+esc(w.who)+'</span>'+(w.note?'<span class="cover-note">'+esc(w.note)+'</span>':'')
+          : '<span class="sched-pending">To be added</span>';
+        html += '<tr'+(active?' class="this-week"':'')+'>'+
+                '<td><span class="sched-week">'+fmtRange(w.start,w.end)+'</span>'+
+                (active?'<span class="week-badge">This Week</span>':'')+'</td>'+
+                '<td>'+nameCell+'</td></tr>';
+      });
+      html += '</tbody></table>';
+      if(d.team && Object.keys(d.team).length){ html += swapBox(key, d, upcoming); }
+    } else if(d.weeks && d.weeks.length){
+      html += '<div class="sched-empty">No upcoming weeks are posted for '+esc(d.label)+' right now.<br>Check back soon.</div>';
+    } else {
+      html += '<div class="sched-empty">Schedule for '+esc(d.label)+' has not been posted yet.<br>Check back soon.</div>';
+    }
+    html += '</div>';
+  });
+  container.innerHTML = html;
+  document.getElementById("divTabs").innerHTML = tabs;
+}
+
+function swapBox(key, d, weeks){
+  const names = Object.keys(d.team);
+  const opts = names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join("");
+  const weekOpts = (weeks||d.weeks).map(w=>{
+    const v = fmtRange(w.start,w.end)+" ("+w.who+")";
+    return '<option value="'+esc(v)+'">'+esc(v)+'</option>';
+  }).join("");
+  return ''+
+  '<div class="swap-box">'+
+    '<h3>Request a Coverage Swap</h3>'+
+    '<p class="swap-sub">Fill this out and it opens a pre-written email to the chaplain you\'d like to swap with. The rotation coordinator is copied automatically. No shift changes until both of you agree.</p>'+
+    '<div class="swap-grid">'+
+      '<div class="swap-field"><label>Your Name</label><select id="sw_from_'+key+'">'+opts+'</select></div>'+
+      '<div class="swap-field"><label>Week You Need Covered</label><select id="sw_week_'+key+'">'+weekOpts+'</select></div>'+
+      '<div class="swap-field full"><label>Ask This Chaplain</label><select id="sw_to_'+key+'">'+opts+'</select></div>'+
+      '<div class="swap-field full"><label>Message (optional)</label><textarea id="sw_msg_'+key+'" placeholder="Any details \u2014 a week you can cover in return, the reason, etc."></textarea></div>'+
+    '</div>'+
+    '<button class="btn-swap" onclick="sendSwap(\''+key+'\')">Open Swap Request Email</button>'+
+    '<div class="swap-hint">Opens in your email app so you can review before sending.</div>'+
+  '</div>';
+}
+
+function sendSwap(key){
+  const d = DIVISIONS[key];
+  const from = document.getElementById("sw_from_"+key).value;
+  const to   = document.getElementById("sw_to_"+key).value;
+  const week = document.getElementById("sw_week_"+key).value;
+  const msg  = document.getElementById("sw_msg_"+key).value.trim();
+  if(from === to){ alert("Pick a different chaplain to swap with \u2014 that's your own name."); return; }
+  const toEmail = d.team[to];
+  const cc = d.coordinator || "";
+  const subject = "Coverage swap request \u2014 "+d.label+" ("+week+")";
+  const body =
+    "Hi "+to+",\n\n"+
+    from+" is requesting coverage for the following on-call week:\n"+
+    "  "+week+"\n\n"+
+    (msg ? ("Note: "+msg+"\n\n") : "")+
+    "Could you cover this week or arrange a swap? The rotation coordinator is copied on this email.\n\n"+
+    "Thank you,\n"+from+"\n\n"+
+    "— Sent from the TPD Chaplains portal";
+  const link = "mailto:"+encodeURIComponent(toEmail)+
+    (cc?("?cc="+encodeURIComponent(cc)+"&"):"?")+
+    "subject="+encodeURIComponent(subject)+
+    "&body="+encodeURIComponent(body);
+  window.location.href = link;
+}
+
+function showDivision(key, btn){
+  document.querySelectorAll(".div-view").forEach(v=>v.classList.remove("active"));
+  document.querySelectorAll(".div-tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("view-"+key).classList.add("active");
+  if(btn) btn.classList.add("active");
+}
+
+function doLogin(){
+  const val = document.getElementById('passwordInput').value;
+  if(val === PASSWORD){
+    sessionStorage.setItem('chapAuth','1');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+  } else {
+    document.getElementById('loginError').style.display='block';
+    document.getElementById('passwordInput').value='';
+    document.getElementById('passwordInput').focus();
+  }
+}
+
+function doLogout(){
+  sessionStorage.removeItem('chapAuth');
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('passwordInput').value='';
+}
+
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")){
+      n.classList.add('active');
+    }
+  });
+}
+
+// Build the schedule tables on load
+renderDivisions();
+
+// Check session on load
+if(sessionStorage.getItem('chapAuth')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+}
+</script>
+</body>
+</html>
